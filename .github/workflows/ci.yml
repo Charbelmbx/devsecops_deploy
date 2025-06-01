@@ -1,0 +1,51 @@
+name: Deploy avec Sécurité
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  secure-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Télécharger OPA
+        run: |
+          mkdir -p bin
+          curl -L -o bin/opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64_static
+          chmod +x bin/opa
+          bin/opa version
+
+      - name: Préparer l'entrée JSON (Dockerfile)
+        run: |
+          echo '{
+            "instructions": [
+              { "command": "FROM", "value": "latest" },
+              { "command": "USER", "value": "root" }
+            ],
+            "image": "docker-web:v1.0.0"
+          }' > docker_input.json
+
+      - name: Vérifier la syntaxe des règles OPA
+        run: |
+          echo " Vérification de la syntaxe de la règle"
+          bin/opa check opa/docker_policy.rego
+
+      - name: Exécuter les règles OPA (avec contrôle)
+        run: |
+           sudo apt-get update && sudo apt-get install -y jq
+           echo " Évaluation des règles de sécurité OPA..."
+           bin/opa eval --input docker_input.json --data opa/docker_policy.rego "data.docker.security.deny" > result.txt
+           cat result.txt
+           if jq '.result[0].expressions[0].value | length > 0' result.txt | grep -q true; then
+             echo " Échec des règles de sécurité OPA."
+             exit 1
+            else
+              echo " Aucune violation de règle détectée."
+            fi
+
+      - name: Fin du pipeline
+        run: echo " Déploiement sécurisé OK"

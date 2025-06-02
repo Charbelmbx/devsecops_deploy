@@ -24,7 +24,7 @@ jobs:
           echo '{
             "instructions": [
               { "command": "FROM", "value": "latest" },
-              { "command": "USER", "value": "root" }
+              { "command": "USER", "value": "root" },
             ],
           
           }' > docker_input.json

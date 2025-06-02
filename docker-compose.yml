@@ -1,11 +1,21 @@
-version: '3'
-services:
-  web:
-    build: .
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    restart: unless-stopped
-    
+ # Spécifie la version de la syntaxe de Docker Compose
+version: '3' 
+
+ # Début de la définition des services
+services: 
+ # Nom du service
+  web: 
+  # Indique à Docker de construire l'image à partir du Dockerfile dans le répertoire courant
+    build: .  
+     # Définit les ports à exposer
+    ports: 
+    # Mappe le port 3000 de l'hôte au port 3000 du conteneur
+      - "3000:3000"  
+       # Définit les volumes à monter
+    volumes: 
+     # Monte le répertoire courant de l'hôte dans /app dans le conteneur
+      - .:/app 
+      # Monte un volume anonyme pour les node_modules (évite les conflits avec l'hôte)
+      - /app/node_modules 
+       # Redémarre le conteneur sauf s'il a été arrêté manuellement 
+    restart: unless-stopped 

@@ -1,5 +1,5 @@
 # Utilise une image officielle Node.js
-FROM node:22
+FROM node:20
 
 # Crée un dossier de travail dans le conteneur
 WORKDIR /app
@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Lance le serveur
-CMD ["node", "server.js"]
+CMD ["node", "app.js"]

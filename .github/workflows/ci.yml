@@ -24,7 +24,12 @@ jobs:
           echo '{
             "instructions": [
               { "command": "FROM", "value": "node:20" },
-              { "command": "USER", "value": "appuser" }
+              { "command": "USER", "value": "appuser" },
+              { "command": "WORKDIR", "value": "/app" },
+              { "command": "COPY", "value": "." },
+              { "command": "RUN", "value": "npm install" },
+              { "command": "EXPOSE", "value": "3000" },
+              { "command": "CMD", "value": ["npm", "start"] }
             ],
           
           }' > docker_input.json

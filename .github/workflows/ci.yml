@@ -23,8 +23,8 @@ jobs:
         run: |
           echo '{
             "instructions": [
-              { "command": "FROM", "value": "latest" },
-              { "command": "USER", "value": "root" },
+              { "command": "FROM", "value": "node:20" },
+              { "command": "USER", "value": "appuser" }
             ],
           
           }' > docker_input.json
